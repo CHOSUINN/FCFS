@@ -9,6 +9,9 @@ server:
 #  redis:
 #    host: ${SPRING_REDIS_HOST}
 #    port: ${SPRING_REDIS_PORT}
+#  # snake_case to camelCase
+#  jackson:
+#    property-naming-strategy: SNAKE_CASE
 
 
 # local development database setting
@@ -22,3 +25,10 @@ spring:
     url: jdbc:mysql://localhost:3306/fcfs
     username: root
     password: 2203
+  # snake_case to camelCase
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+jwt:
+  secret:
+    key: SW1Hb25uYUJlV29ybGRCZXN0UHJvZ3JhbW1lckFuZElNZWFuSXQ=
