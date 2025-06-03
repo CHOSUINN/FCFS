@@ -13,7 +13,6 @@ public record UserResponseDto(
         LocalDateTime createdAt,
         LocalDateTime modifiedAt
 ) {
-
     public static UserResponseDto toDto(User user) {
         return new UserResponseDto(
                 user.getId(),
