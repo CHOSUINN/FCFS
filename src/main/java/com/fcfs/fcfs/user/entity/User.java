@@ -24,13 +24,13 @@ public class User extends Timestamped {
     @Column(nullable = false, length = 64)
     private String password;
 
-    @Column(length = 32)
+    @Column(unique = true, length = 32)
     private String nickname;
 
     @Column(length = 100)
     private String address;
 
-    @Column(length = 32)
+    @Column(unique = true, length = 32)
     private String phoneNumber;
 
     @Setter
