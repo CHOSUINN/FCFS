@@ -8,5 +8,5 @@ public interface EmailVerificationService {
 
     void sendVerificationEmail(String email) throws MessagingException, UnsupportedEncodingException;
 
-    void verifyLinkToken(String token);
+    Long verifyLinkToken(String token);
 }

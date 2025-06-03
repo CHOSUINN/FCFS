@@ -66,7 +66,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     }
 
     @Override
-    public void verifyLinkToken(String token) {
+    public Long verifyLinkToken(String token) {
 
         // 1. redis에서 토큰에 매핑된 UserId 조회
         String userId = emailTokenRepository.getUserIdByToken(token);
@@ -90,5 +90,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
 
         // 5. redis 토큰 삭제
         emailTokenRepository.deleteToken(token);
+
+        return user.get().getId();
     }
 }

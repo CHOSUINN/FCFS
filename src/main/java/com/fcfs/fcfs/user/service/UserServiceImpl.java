@@ -2,6 +2,7 @@ package com.fcfs.fcfs.user.service;
 
 import com.fcfs.fcfs.Email.service.EmailVerificationService;
 import com.fcfs.fcfs.user.dto.request.UserSignUpRequestDto;
+import com.fcfs.fcfs.user.dto.response.UserResponseDto;
 import com.fcfs.fcfs.user.entity.User;
 import com.fcfs.fcfs.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
@@ -36,7 +37,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void verifyEmail(String token) {
-        emailVerificationService.verifyLinkToken(token);
+    public UserResponseDto verifyEmail(String token) {
+
+        Long userId = emailVerificationService.verifyLinkToken(token);
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("존재하지 않는 회원입니다");
+        }
+        return UserResponseDto.toDto(user);
+    }
+
+    @Override
+    public UserResponseDto infoUser(Long userId) {
+
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+        }
+        return UserResponseDto.toDto(user);
     }
 }
