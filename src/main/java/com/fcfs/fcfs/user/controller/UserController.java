@@ -2,7 +2,7 @@ package com.fcfs.fcfs.user.controller;
 
 import com.fcfs.fcfs.global.common.ApiResponse;
 import com.fcfs.fcfs.user.dto.request.UserSignUpRequestDto;
-import com.fcfs.fcfs.user.service.UserServiceImpl;
+import com.fcfs.fcfs.user.service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 @RequestMapping("/api")
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @PostMapping("/auth/register")
     public ResponseEntity<ApiResponse<Void>> register(@RequestBody @Valid UserSignUpRequestDto requestDto) throws MessagingException, UnsupportedEncodingException {

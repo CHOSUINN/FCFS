@@ -15,12 +15,13 @@ import java.io.UnsupportedEncodingException;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailVerificationService emailVerificationService;
 
+    @Override
     public void registerUser(UserSignUpRequestDto requestDto) throws MessagingException, UnsupportedEncodingException {
 
         // Todo: 이메일 중복 검사, 닉네임 중복검사, 전화번호 중복검사
@@ -34,6 +35,7 @@ public class UserServiceImpl {
         emailVerificationService.sendVerificationEmail(user.getEmail());
     }
 
+    @Override
     public void verifyEmail(String token) {
         emailVerificationService.verifyLinkToken(token);
     }
