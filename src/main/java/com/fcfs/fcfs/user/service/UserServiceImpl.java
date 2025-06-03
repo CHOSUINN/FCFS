@@ -22,6 +22,9 @@ public class UserServiceImpl {
     private final EmailVerificationService emailVerificationService;
 
     public void registerUser(UserSignUpRequestDto requestDto) throws MessagingException, UnsupportedEncodingException {
+
+        // Todo: 이메일 중복 검사, 닉네임 중복검사, 전화번호 중복검사
+
         // DB에 암호화 및 저장 진행
         String encodedPassword = passwordEncoder.encode(requestDto.password());
         User user = User.from(requestDto, encodedPassword);
