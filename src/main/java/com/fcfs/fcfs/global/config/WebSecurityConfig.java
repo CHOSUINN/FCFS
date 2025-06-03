@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -71,8 +72,19 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/", "/api/auth/register", "api/verify/**").permitAll() // 메인페이지 요청 허가
-                        .anyRequest().authenticated() // 그 외 모든 요청 인증처리
+
+                        // 상품 조회 api
+                        .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**")
+                            .permitAll()
+                        // 상품 생성, 수정, 삭제 api
+                        .requestMatchers(HttpMethod.POST, "/api/products").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/products/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/*").authenticated()
+
+                        // 회원가입, 이메일 인증 api
+                        .requestMatchers("/api/auth/register", "api/verify/**").permitAll()
+                        // 그 외 모든 요청 인증처리
+                        .anyRequest().authenticated()
         );
 
         // 필터관리
