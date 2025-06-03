@@ -25,6 +25,10 @@ public enum ErrorCode implements ErrorInterface {
             "서버 내부 오류가 발생했습니다."
     );
 
+//    INVALID_INPUT_VALUE(
+//            HttpStatus.
+//    )
+
     private final Integer httpStatus;
     private final String errorCode;
     private final String title;

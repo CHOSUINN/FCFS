@@ -1,6 +1,9 @@
 package com.fcfs.fcfs.global.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fcfs.fcfs.global.common.ApiResponse;
+import com.fcfs.fcfs.global.exception.CustomException;
+import com.fcfs.fcfs.global.exception.ErrorCode;
 import com.fcfs.fcfs.global.security.UserDetailsImpl;
 import com.fcfs.fcfs.global.security.dto.LoginRequestDto;
 import com.fcfs.fcfs.global.security.util.JwtUtil;
@@ -9,11 +12,14 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -21,12 +27,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j(topic = "JwtAuthenticationFilter - JWT 인증 필터. 로그인 시 작동")
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
+    private final Validator validator;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     // 빈등록할때 경로 설정해줄 세터.
@@ -36,7 +46,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         super.setFilterProcessesUrl(filterProcessesUrl);
     }
 
-    // 로그이니 시도 메소드
+    // 로그인 시도 메소드
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         log.info("로그인 시도");
@@ -44,6 +54,20 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // 1) HTTP 요청의 바디(InputStream)에서 JSON을 읽어 LoginRequestDto로 매핑
             LoginRequestDto requestDto = new ObjectMapper()
                     .readValue(request.getInputStream(), LoginRequestDto.class);
+
+            // 2) dto의 필드 검증
+            Set<ConstraintViolation<LoginRequestDto>> violations = validator.validate(requestDto);
+            if (!violations.isEmpty()) {
+                // 검증 위반 메시지들을 모아 하나의 문자열로 합칩니다.
+                String errorMessage = violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.joining("; "));
+                log.error("Validation failed: {}", errorMessage);
+
+                // AuthenticationException 계열의 예외로 던지면
+                // 스프링 시큐리티가 자동으로 unsuccessfulAuthentication()을 호출합니다.
+                throw new AuthenticationServiceException("입력값 검증 실패: " + errorMessage);
+            }
 
             // 2) UsernamePasswordAuthenticationToken 생성
             //    - 첫 번째 파라미터: username (아이디)
@@ -77,7 +101,25 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
         String token = jwtUtil.createToken(email, role);
+
         response.addHeader("Authorization", "Bearer " + token);
+
+        // 3) HTTP 상태 200, Content-Type JSON + UTF-8 설정
+        response.setStatus(HttpStatus.OK.value());
+        response.setContentType("application/json;charset=UTF-8");
+
+        // 4) ApiResponse에 토큰을 담아 반환
+        //    데이터 형태는 상황에 맞게 바꿔도 좋습니다. 예를 들어, 토큰만 보내도 되고, 사용자 정보를 함께 보내도 됩니다.
+        Map<String, String> data = Map.of("token", token);
+
+        ApiResponse<Map<String, String>> apiResponse = ApiResponse.success(
+                HttpStatus.OK,
+                "로그인에 성공했습니다.",
+                data
+        );
+
+        // 5) ObjectMapper로 JSON 직렬화하여 응답 본문에 쓰기
+        objectMapper.writeValue(response.getWriter(), apiResponse);
     }
 
     @Override

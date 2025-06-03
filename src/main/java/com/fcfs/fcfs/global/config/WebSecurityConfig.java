@@ -4,6 +4,7 @@ import com.fcfs.fcfs.global.security.UserDetailsServiceImpl;
 import com.fcfs.fcfs.global.security.filter.JwtAuthenticationFilter;
 import com.fcfs.fcfs.global.security.filter.JwtAuthorizationFilter;
 import com.fcfs.fcfs.global.security.util.JwtUtil;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,7 @@ public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
+    private final Validator validator;
     private final AuthenticationConfiguration authenticationConfiguration; // authentication manger 주입을 위해 사용
 
 
@@ -37,7 +39,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, validator);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration)); // 바로 위에서 등록한 authenticationManager(AuthenticationConfiguration authenticationConfiguration) 사용
         filter.setFilterProcessesUrl("/api/auth/login");
         return filter;
