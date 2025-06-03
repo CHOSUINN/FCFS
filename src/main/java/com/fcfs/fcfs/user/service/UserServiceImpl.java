@@ -1,8 +1,7 @@
 package com.fcfs.fcfs.user.service;
 
 import com.fcfs.fcfs.Email.service.EmailVerificationService;
-import com.fcfs.fcfs.user.dto.UserSignUpRequestDto;
-import com.fcfs.fcfs.user.dto.request.UserLoginRequestDto;
+import com.fcfs.fcfs.user.dto.request.UserSignUpRequestDto;
 import com.fcfs.fcfs.user.entity.User;
 import com.fcfs.fcfs.user.repository.UserRepository;
 import jakarta.mail.MessagingException;

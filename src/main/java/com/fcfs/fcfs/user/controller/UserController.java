@@ -1,8 +1,7 @@
 package com.fcfs.fcfs.user.controller;
 
 import com.fcfs.fcfs.global.common.ApiResponse;
-import com.fcfs.fcfs.user.dto.UserSignUpRequestDto;
-import com.fcfs.fcfs.user.dto.request.UserLoginRequestDto;
+import com.fcfs.fcfs.user.dto.request.UserSignUpRequestDto;
 import com.fcfs.fcfs.user.service.UserServiceImpl;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;

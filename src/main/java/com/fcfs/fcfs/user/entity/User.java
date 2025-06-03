@@ -1,7 +1,7 @@
 package com.fcfs.fcfs.user.entity;
 
 import com.fcfs.fcfs.global.common.Timestamped;
-import com.fcfs.fcfs.user.dto.UserSignUpRequestDto;
+import com.fcfs.fcfs.user.dto.request.UserSignUpRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
