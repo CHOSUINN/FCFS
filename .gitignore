@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+src/main/resources/containerSetting.yml
+src/main/resources/localSetting.yml
+
+docker-compose.yml
+Dockerfile
