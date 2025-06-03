@@ -1,0 +1,37 @@
+package com.fcfs.fcfs.product.entity;
+
+import com.fcfs.fcfs.global.common.Timestamped;
+import com.fcfs.fcfs.user.entity.User;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Builder
+@Table(name = "products")
+public class Product extends Timestamped {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 100, nullable = false)
+    private String name;
+
+    @Column(length = 500, nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private Integer stock;
+
+    @Column(nullable = false)
+    private Integer price;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+}
