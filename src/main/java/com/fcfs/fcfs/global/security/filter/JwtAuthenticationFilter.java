@@ -2,8 +2,6 @@ package com.fcfs.fcfs.global.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fcfs.fcfs.global.common.ApiResponse;
-import com.fcfs.fcfs.global.exception.CustomException;
-import com.fcfs.fcfs.global.exception.ErrorCode;
 import com.fcfs.fcfs.global.security.UserDetailsImpl;
 import com.fcfs.fcfs.global.security.dto.LoginRequestDto;
 import com.fcfs.fcfs.global.security.util.JwtUtil;
@@ -17,7 +15,6 @@ import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -6,7 +6,7 @@ import com.fcfs.fcfs.product.entity.Product;
 import com.fcfs.fcfs.user.dto.request.UserSignUpRequestDto;
 import com.fcfs.fcfs.wishlist.entity.Wishlist;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
