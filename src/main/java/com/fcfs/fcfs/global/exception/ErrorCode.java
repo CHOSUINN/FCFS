@@ -41,6 +41,36 @@ public enum ErrorCode implements ErrorInterface {
             "Empty Wishlist",
             "위시리스트가 비어 있습니다."
     ),
+    ORDER_NOT_FOUND(
+            HttpStatus.NOT_FOUND.value(),
+            "ORDER_NOT_FOUND",
+            "Order Not Found",
+            "해당 주문은 존재하지 않습니다"
+    ),
+    ORDER_FORBIDDEN(
+            HttpStatus.FORBIDDEN.value(),
+            "ORDER_FORBIDDEN",
+            "Order Forbidden",
+            "주문에 대한 접근 권한이 없습니다."
+    ),
+    ORDER_CANCELLATION_FAILURE(
+            HttpStatus.FORBIDDEN.value(),
+            "ORDER_CANCELLATION_FAILURE",
+            "Order Cancellation Failure",
+            "주문을 취소할 수 없는 상태입니다."
+    ),
+    ORDER_RETURN_NOT_ALLOWED(
+            HttpStatus.BAD_REQUEST.value(),
+            "ORDER_RETURN_NOT_ALLOWED",
+            "Order Return Not Allowed",
+            "반품이 불가능한 상태입니다."
+    ),
+    ORDER_RETURN_EXPIRED(
+            HttpStatus.BAD_REQUEST.value(),
+            "ORDER_RETURN_EXPIRED",
+            "Order Return Expired",
+            "반송 가능 기간을 초과하였습니다."
+    ),
 
 
     INVALID_PARAMETER(
