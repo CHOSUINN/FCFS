@@ -37,8 +37,8 @@ public class OrderController {
 
     // 주문 취소
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<ApiResponse<Void>> cancel(@UserId Long userId,
-                                                    @PathVariable(name = "orderId") Long orderId) {
+    public ResponseEntity<?> cancel(@UserId Long userId,
+                                 @PathVariable(name = "orderId") Long orderId) {
         orderService.cancelOrder(userId, orderId);
         return ResponseEntity.ok(ApiResponse.success(
                 HttpStatus.OK,
@@ -80,9 +80,9 @@ public class OrderController {
 
     // 주문내역 통째로 반품
     @PostMapping("/{orderId}/return")
-    public ResponseEntity<ApiResponse<Void>> refund(@UserId Long userId,
-                                                    @PathVariable(name = "orderId") Long orderId,
-                                                    @Valid @RequestBody OrderRefundRequestDto requestDto) {
+    public ResponseEntity<?> refund(@UserId Long userId,
+                                 @PathVariable(name = "orderId") Long orderId,
+                                 @Valid @RequestBody OrderRefundRequestDto requestDto) {
         orderService.refundProduct(userId, orderId, requestDto);
         return ResponseEntity.ok(ApiResponse.success(
                 HttpStatus.OK,

@@ -15,7 +15,6 @@ import com.fcfs.fcfs.user.repository.UserRepository;
 import com.fcfs.fcfs.wishlist.entity.Wishlist;
 import com.fcfs.fcfs.wishlist.entity.WishlistDetail;
 import com.fcfs.fcfs.wishlist.repository.WishlistRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
