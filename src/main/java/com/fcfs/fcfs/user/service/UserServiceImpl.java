@@ -1,6 +1,6 @@
 package com.fcfs.fcfs.user.service;
 
-import com.fcfs.fcfs.Email.service.EmailVerificationService;
+import com.fcfs.fcfs.email.service.EmailVerificationService;
 import com.fcfs.fcfs.user.dto.request.UserSignUpRequestDto;
 import com.fcfs.fcfs.user.dto.response.UserResponseDto;
 import com.fcfs.fcfs.user.entity.User;
