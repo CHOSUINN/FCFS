@@ -15,7 +15,7 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j(topic = "EmailVerificationService")
+@Slf4j(topic = "EmailVerificationServiceImpl")
 @Service
 @RequiredArgsConstructor
 @Transactional

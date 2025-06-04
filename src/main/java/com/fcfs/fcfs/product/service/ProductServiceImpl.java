@@ -4,12 +4,14 @@ import com.fcfs.fcfs.product.dto.response.ProductResponseDto;
 import com.fcfs.fcfs.product.entity.Product;
 import com.fcfs.fcfs.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j(topic = "ProductServiceImpl")
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
