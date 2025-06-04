@@ -2,10 +2,13 @@ package com.fcfs.fcfs.product.entity;
 
 import com.fcfs.fcfs.global.common.Timestamped;
 import com.fcfs.fcfs.user.entity.User;
+import com.fcfs.fcfs.wishlist.entity.WishlistDetail;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -14,7 +17,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "products")
 public class Product extends Timestamped {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 100, nullable = false)
