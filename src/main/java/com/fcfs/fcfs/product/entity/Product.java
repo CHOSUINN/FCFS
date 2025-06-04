@@ -4,7 +4,6 @@ import com.fcfs.fcfs.global.common.Timestamped;
 import com.fcfs.fcfs.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Builder
 @Table(name = "products")
 public class Product extends Timestamped {
 
