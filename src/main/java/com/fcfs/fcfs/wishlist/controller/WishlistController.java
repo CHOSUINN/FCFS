@@ -41,7 +41,7 @@ public class WishlistController {
         ));
     }
 
-    // todo: 위시리스트 상품 제거
+    // 위시리스트 상품 제거
     @DeleteMapping("/{productId}")
     public ResponseEntity<ApiResponse<WishlistResponseDto>> delete(@UserId Long userId,
                                                                    @PathVariable(name = "productId") Long productId) {
