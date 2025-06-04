@@ -8,9 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -52,6 +50,11 @@ public class Wishlist {
     public void removeWishlistDetail(WishlistDetail detail) {
         wishlistDetail.remove(detail);
         detail.setWishlist(null);
+    }
+
+    // 주문 혹은 상품 전체 삭제 기능 사용시 사용하는 메서드
+    public void initWishlist() {
+        wishlistDetail.clear();
     }
 
 }
