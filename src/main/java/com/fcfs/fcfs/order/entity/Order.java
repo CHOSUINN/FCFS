@@ -1,5 +1,6 @@
 package com.fcfs.fcfs.order.entity;
 
+import com.fcfs.fcfs.order.dto.request.OrderRequestDto;
 import com.fcfs.fcfs.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,10 +31,12 @@ public class Order {
     @Column(length = 200, nullable = false)
     private String address;
 
+    // 주문 시간 저장
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime orderedAt;
 
+    // 주문 상태 변경 시간 저장
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
@@ -51,6 +54,14 @@ public class Order {
     )
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
+    public static Order from(User user, OrderRequestDto requestDto) {
+        return Order.builder()
+                .orderStatus(OrderStatus.PREPARING_PRODUCT)
+                .address(requestDto.address())
+                .user(user)
+                .build();
+    }
+
     public void addOrderDetail(OrderDetail detail) {
         this.orderDetails.add(detail);
         detail.setOrder(this);
@@ -60,5 +71,4 @@ public class Order {
         this.orderDetails.remove(detail);
         detail.setOrder(null);
     }
-
 }

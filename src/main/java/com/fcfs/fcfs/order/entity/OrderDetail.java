@@ -1,12 +1,11 @@
 package com.fcfs.fcfs.order.entity;
 
 import com.fcfs.fcfs.product.entity.Product;
+import com.fcfs.fcfs.wishlist.entity.WishlistDetail;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Getter
 @Builder
 @Entity
 @NoArgsConstructor
@@ -21,15 +20,19 @@ public class OrderDetail {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false)
-    private Integer price;
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+    public static OrderDetail from(WishlistDetail detail) {
+        return OrderDetail.builder()
+                .quantity(detail.getQuantity())
+                .product(detail.getProduct())
+                .build();
+    }
 }

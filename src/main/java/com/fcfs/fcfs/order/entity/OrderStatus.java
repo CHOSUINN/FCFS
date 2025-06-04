@@ -1,7 +1,9 @@
 package com.fcfs.fcfs.order.entity;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum OrderStatus {
     PREPARING_PRODUCT("상품 준비 중"),

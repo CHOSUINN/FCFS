@@ -31,7 +31,16 @@ public enum ErrorCode implements ErrorInterface {
             HttpStatus.NOT_FOUND.value(),
             "WISHLIST_DETAIL_NOT_FOUND",
             "Wishlist Detail Not Found",
-            "위시리스트 안에 해당 상품이 존재하지 않습니다."),
+            "위시리스트 안에 해당 상품이 존재하지 않습니다."
+    ),
+
+    // 주문
+    ORDER_FAILURE_EMPTY_WISHLIST(
+            HttpStatus.NOT_FOUND.value(),
+            "EMPTY_WISHLIST",
+            "Empty Wishlist",
+            "위시리스트가 비어 있습니다."
+    ),
 
 
     INVALID_PARAMETER(
