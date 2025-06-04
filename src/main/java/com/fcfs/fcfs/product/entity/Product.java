@@ -2,13 +2,10 @@ package com.fcfs.fcfs.product.entity;
 
 import com.fcfs.fcfs.global.common.Timestamped;
 import com.fcfs.fcfs.user.entity.User;
-import com.fcfs.fcfs.wishlist.entity.WishlistDetail;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
