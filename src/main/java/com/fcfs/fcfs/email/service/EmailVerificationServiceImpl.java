@@ -1,6 +1,6 @@
-package com.fcfs.fcfs.Email.service;
+package com.fcfs.fcfs.email.service;
 
-import com.fcfs.fcfs.Email.repository.EmailTokenRepository;
+import com.fcfs.fcfs.email.repository.EmailTokenRepository;
 import com.fcfs.fcfs.user.entity.User;
 import com.fcfs.fcfs.user.repository.UserRepository;
 import jakarta.mail.MessagingException;

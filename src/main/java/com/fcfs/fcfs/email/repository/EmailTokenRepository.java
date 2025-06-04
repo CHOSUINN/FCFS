@@ -1,4 +1,4 @@
-package com.fcfs.fcfs.Email.repository;
+package com.fcfs.fcfs.email.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

@@ -1,4 +1,4 @@
-package com.fcfs.fcfs.Email.service;
+package com.fcfs.fcfs.email.service;
 
 import jakarta.mail.MessagingException;
 
