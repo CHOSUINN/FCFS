@@ -1,17 +1,23 @@
 package com.fcfs.fcfs.user.entity;
 
 import com.fcfs.fcfs.global.common.Timestamped;
+import com.fcfs.fcfs.order.entity.Order;
+import com.fcfs.fcfs.product.entity.Product;
 import com.fcfs.fcfs.user.dto.request.UserSignUpRequestDto;
+import com.fcfs.fcfs.wishlist.entity.Wishlist;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Builder
 @Entity
 @Table(name = "users")
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends Timestamped {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +53,29 @@ public class User extends Timestamped {
     @Column(nullable = false, length = 20)
     private UserRoleEnum role;
 
+    @OneToOne(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Wishlist wishlist;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Product> products = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Order> orders = new ArrayList<>();
+
     public static User from(UserSignUpRequestDto requestDto, String encodedPassword) {
         return User.builder()
                 .email(requestDto.email())
@@ -59,4 +88,28 @@ public class User extends Timestamped {
                 .role(UserRoleEnum.USER)
                 .build();
     }
+
+    public void assignWishlist(Wishlist wishlist) {
+        this.wishlist = wishlist;
+        wishlist.setUser(this);
+    }
+
+    public void removeWishlist() {
+        if (this.wishlist != null) {
+            this.wishlist.setUser(null);
+            this.wishlist = null;
+        }
+    }
+
+    public void addOrder(Order order) {
+        this.orders.add(order);
+        order.setUser(this);
+    }
+
+    public void removeOrder(Order order) {
+        this.orders.remove(order);
+        order.setUser(null);
+    }
+
+
 }

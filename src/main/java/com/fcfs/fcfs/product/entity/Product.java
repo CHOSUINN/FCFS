@@ -3,14 +3,15 @@ package com.fcfs.fcfs.product.entity;
 import com.fcfs.fcfs.global.common.Timestamped;
 import com.fcfs.fcfs.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
-@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "products")
 public class Product extends Timestamped {
 
