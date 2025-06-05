@@ -40,5 +40,14 @@ src/main/resources/application-container.yml
 src/main/resources/application-local.yml
 src/main/resources/application.yml
 
+module-order/src/main/resources/application-local.yml
+module-order/src/main/resources/application.yml
+
+module-product/src/main/resources/application-local.yml
+module-product/src/main/resources/application.yml
+
+module-user/src/main/resources/application-local.yml
+module-user/src/main/resources/application.yml
+
 docker-compose.yml
 Dockerfile
