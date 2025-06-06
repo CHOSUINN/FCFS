@@ -25,7 +25,7 @@ public class WishlistDetail {
     @JoinColumn(name = "wishlist_id", nullable = false)
     private Wishlist wishlist;
 
-    @Column(name = "product_id", nullable = false)
+    @Column(nullable = false)
     private Long productId;
 
     public static WishlistDetail from(Long productId, Integer quantity) {

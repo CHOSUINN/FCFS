@@ -34,6 +34,7 @@ public class WishlistController {
     // 위시리스트 조회
     @GetMapping
     public ResponseEntity<ApiResponse<WishlistResponseDto>> list(@UserId Long userId) {
+        log.info("로그체크");
         return ResponseEntity.ok(ApiResponse.success(
                 HttpStatus.OK,
                 "위시리스트 조회에 성공하였습니다.",

@@ -23,7 +23,7 @@ public record ProductResponseDto(
                 product.getPrice(),
                 product.getCreatedAt(),
                 product.getModifiedAt(),
-                product.getUser().getId()
+                product.getUserId()
         );
     }
 }

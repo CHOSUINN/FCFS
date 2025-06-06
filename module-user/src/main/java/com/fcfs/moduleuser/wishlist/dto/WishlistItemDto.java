@@ -1,6 +1,6 @@
 package com.fcfs.moduleuser.wishlist.dto;
 
-import com.fcfs.moduleuser.wishlist.entity.WishlistDetail;
+import com.fcfs.moduleuser.wishlist.dto.response.ProductResponseDto;
 
 public record WishlistItemDto(
 
@@ -9,12 +9,12 @@ public record WishlistItemDto(
         Integer quantity,
         Integer price
 ) {
-    public static WishlistItemDto from(WishlistDetail wishlistDetail) {
+    public static WishlistItemDto from(ProductResponseDto prduct, Integer quantity) {
         return new WishlistItemDto(
-                wishlistDetail.getProduct().getId(),
-                wishlistDetail.getProduct().getName(),
-                wishlistDetail.getQuantity(),
-                wishlistDetail.getProduct().getPrice()
+                prduct.id(),
+                prduct.name(),
+                quantity,
+                prduct.price()
         );
     }
 }
