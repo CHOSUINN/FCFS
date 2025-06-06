@@ -1,9 +1,9 @@
 package com.fcfs.moduleorder.global.config;
 
-import com.fcfs.moduleorder.global.security.UserDetailsServiceImpl;
-import com.fcfs.moduleorder.global.security.filter.JwtAuthenticationFilter;
-import com.fcfs.moduleorder.global.security.filter.JwtAuthorizationFilter;
-import com.fcfs.moduleorder.global.security.util.JwtUtil;
+import com.fcfs.moduleproduct.global.security.UserDetailsServiceImpl;
+import com.fcfs.moduleproduct.global.security.filter.JwtAuthenticationFilter;
+import com.fcfs.moduleproduct.global.security.filter.JwtAuthorizationFilter;
+import com.fcfs.moduleproduct.global.security.util.JwtUtil;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;

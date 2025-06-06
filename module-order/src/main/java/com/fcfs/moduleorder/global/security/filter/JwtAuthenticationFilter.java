@@ -1,11 +1,11 @@
 package com.fcfs.moduleorder.global.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fcfs.moduleorder.global.common.ApiResponse;
-import com.fcfs.moduleorder.global.security.UserDetailsImpl;
-import com.fcfs.moduleorder.global.security.dto.LoginRequestDto;
-import com.fcfs.moduleorder.global.security.util.JwtUtil;
-import com.fcfs.moduleorder.user.entity.UserRoleEnum;
+import com.fcfs.moduleproduct.global.common.ApiResponse;
+import com.fcfs.moduleproduct.global.security.UserDetailsImpl;
+import com.fcfs.moduleproduct.global.security.dto.LoginRequestDto;
+import com.fcfs.moduleproduct.global.security.util.JwtUtil;
+import com.fcfs.moduleproduct.user.entity.UserRoleEnum;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

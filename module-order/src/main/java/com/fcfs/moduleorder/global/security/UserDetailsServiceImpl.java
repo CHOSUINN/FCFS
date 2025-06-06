@@ -1,7 +1,8 @@
 package com.fcfs.moduleorder.global.security;
 
-import com.fcfs.moduleorder.user.entity.User;
-import com.fcfs.moduleorder.user.repository.UserRepository;
+import com.fcfs.moduleproduct.global.security.UserDetailsImpl;
+import com.fcfs.moduleproduct.user.entity.User;
+import com.fcfs.moduleproduct.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

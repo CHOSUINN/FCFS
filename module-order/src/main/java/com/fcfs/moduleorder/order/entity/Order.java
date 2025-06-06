@@ -1,7 +1,6 @@
 package com.fcfs.moduleorder.order.entity;
 
 import com.fcfs.moduleorder.order.dto.request.OrderRequestDto;
-import com.fcfs.moduleorder.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -42,10 +41,8 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(nullable = false)
+    private Long userId;
 
     @Builder.Default
     @OneToMany(mappedBy = "order",
@@ -55,11 +52,11 @@ public class Order {
     )
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
-    public static Order from(User user, OrderRequestDto requestDto) {
+    public static Order from(Long userId, OrderRequestDto requestDto) {
         return Order.builder()
                 .orderStatus(OrderStatus.PREPARING_PRODUCT)
                 .address(requestDto.address())
-                .user(user)
+                .userId(userId)
                 .build();
     }
 

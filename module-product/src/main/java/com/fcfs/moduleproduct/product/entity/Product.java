@@ -1,7 +1,6 @@
 package com.fcfs.moduleproduct.product.entity;
 
 import com.fcfs.moduleproduct.global.common.Timestamped;
-import com.fcfs.moduleproduct.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -31,7 +30,6 @@ public class Product extends Timestamped {
     @Column(nullable = false)
     private Integer price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(nullable = false)
+    private Long userId;
 }

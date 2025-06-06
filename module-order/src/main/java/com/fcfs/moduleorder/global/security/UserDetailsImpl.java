@@ -1,7 +1,7 @@
 package com.fcfs.moduleorder.global.security;
 
-import com.fcfs.moduleorder.user.entity.User;
-import com.fcfs.moduleorder.user.entity.UserRoleEnum;
+import com.fcfs.moduleproduct.user.entity.User;
+import com.fcfs.moduleproduct.user.entity.UserRoleEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

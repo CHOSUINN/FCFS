@@ -2,8 +2,6 @@ package com.fcfs.moduleuser.wishlist.service;
 
 import com.fcfs.moduleuser.global.exception.CustomException;
 import com.fcfs.moduleuser.global.exception.ErrorCode;
-import com.fcfs.moduleuser.product.entity.Product;
-import com.fcfs.moduleuser.product.repository.ProductRepository;
 import com.fcfs.moduleuser.user.entity.User;
 import com.fcfs.moduleuser.user.repository.UserRepository;
 import com.fcfs.moduleuser.wishlist.dto.WishlistItemDto;
@@ -29,7 +27,6 @@ public class WishlistServiceImpl implements WishlistService {
 
     private final WishlistRepository wishlistRepository;
     private final UserRepository userRepository;
-    private final ProductRepository productRepository;
 
     // 위시리스트 물품 등록 및 수량
     @Override

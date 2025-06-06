@@ -1,8 +1,6 @@
 package com.fcfs.moduleuser.user.entity;
 
 import com.fcfs.moduleuser.global.common.Timestamped;
-import com.fcfs.moduleuser.order.entity.Order;
-import com.fcfs.moduleuser.product.entity.Product;
 import com.fcfs.moduleuser.user.dto.request.UserSignUpRequestDto;
 import com.fcfs.moduleuser.wishlist.entity.Wishlist;
 import jakarta.persistence.*;
@@ -60,22 +58,6 @@ public class User extends Timestamped {
     )
     private Wishlist wishlist;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "user",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<Product> products = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "user",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<Order> orders = new ArrayList<>();
-
     public static User from(UserSignUpRequestDto requestDto, String encodedPassword) {
         return User.builder()
                 .email(requestDto.email())
@@ -100,16 +82,4 @@ public class User extends Timestamped {
             this.wishlist = null;
         }
     }
-
-    public void addOrder(Order order) {
-        this.orders.add(order);
-        order.setUser(this);
-    }
-
-    public void removeOrder(Order order) {
-        this.orders.remove(order);
-        order.setUser(null);
-    }
-
-
 }

@@ -1,7 +1,7 @@
 package com.fcfs.moduleorder.global.security.filter;
 
-import com.fcfs.moduleorder.global.security.UserDetailsServiceImpl;
-import com.fcfs.moduleorder.global.security.util.JwtUtil;
+import com.fcfs.moduleproduct.global.security.UserDetailsServiceImpl;
+import com.fcfs.moduleproduct.global.security.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

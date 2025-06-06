@@ -1,6 +1,6 @@
 package com.fcfs.moduleorder.global.security.util;
 
-import com.fcfs.moduleorder.user.entity.UserRoleEnum;
+import com.fcfs.moduleproduct.user.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;

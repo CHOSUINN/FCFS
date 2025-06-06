@@ -1,6 +1,5 @@
 package com.fcfs.moduleuser.wishlist.entity;
 
-import com.fcfs.moduleuser.product.entity.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
@@ -26,15 +25,13 @@ public class WishlistDetail {
     @JoinColumn(name = "wishlist_id", nullable = false)
     private Wishlist wishlist;
 
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
 
-    public static WishlistDetail from(Product product, Integer quantity) {
+    public static WishlistDetail from(Long productId, Integer quantity) {
         return WishlistDetail.builder()
+                .productId(productId)
                 .quantity(quantity)
-                .product(product)
                 .build();
     }
 }

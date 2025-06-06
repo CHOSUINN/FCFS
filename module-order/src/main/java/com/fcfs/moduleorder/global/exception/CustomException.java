@@ -1,5 +1,7 @@
 package com.fcfs.moduleorder.global.exception;
 
+import com.fcfs.moduleproduct.global.exception.ErrorInterface;
+
 public class CustomException extends RuntimeException {
 
     private final ErrorInterface errorCode;

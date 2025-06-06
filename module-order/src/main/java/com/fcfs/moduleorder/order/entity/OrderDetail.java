@@ -1,7 +1,5 @@
 package com.fcfs.moduleorder.order.entity;
 
-import com.fcfs.moduleorder.product.entity.Product;
-import com.fcfs.moduleorder.wishlist.entity.WishlistDetail;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,14 +23,6 @@ public class OrderDetail {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    public static OrderDetail from(WishlistDetail detail) {
-        return OrderDetail.builder()
-                .quantity(detail.getQuantity())
-                .product(detail.getProduct())
-                .build();
-    }
+    @Column(nullable = false)
+    private Long productId;
 }
