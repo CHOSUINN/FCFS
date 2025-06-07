@@ -6,7 +6,6 @@ import com.fcfs.moduleorder.global.exception.CustomException;
 import com.fcfs.moduleorder.global.exception.ErrorCode;
 import com.fcfs.moduleorder.order.dto.OrderItemDto;
 import com.fcfs.moduleorder.order.dto.WishlistItemDto;
-import com.fcfs.moduleorder.order.dto.request.OrderRefundRequestDto;
 import com.fcfs.moduleorder.order.dto.request.OrderRequestDto;
 import com.fcfs.moduleorder.order.dto.response.OrderResponseDto;
 import com.fcfs.moduleorder.order.dto.response.ProductResponseDto;
