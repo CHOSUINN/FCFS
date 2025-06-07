@@ -50,7 +50,7 @@ public class Order {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<OrderDetail> orderDetails = new ArrayList<>();
+    private List<OrderItem> orderDetails = new ArrayList<>();
 
     public static Order from(Long userId, OrderRequestDto requestDto) {
         return Order.builder()
@@ -60,12 +60,12 @@ public class Order {
                 .build();
     }
 
-    public void addOrderDetail(OrderDetail detail) {
+    public void addOrderDetail(OrderItem detail) {
         this.orderDetails.add(detail);
         detail.setOrder(this);
     }
 
-    public void removeOrderDetail(OrderDetail detail) {
+    public void removeOrderDetail(OrderItem detail) {
         this.orderDetails.remove(detail);
         detail.setOrder(null);
     }

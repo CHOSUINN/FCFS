@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "wishlist_details")
-public class WishlistDetail {
+public class WishlistItem {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,8 +28,8 @@ public class WishlistDetail {
     @Column(nullable = false)
     private Long productId;
 
-    public static WishlistDetail from(Long productId, Integer quantity) {
-        return WishlistDetail.builder()
+    public static WishlistItem from(Long productId, Integer quantity) {
+        return WishlistItem.builder()
                 .productId(productId)
                 .quantity(quantity)
                 .build();

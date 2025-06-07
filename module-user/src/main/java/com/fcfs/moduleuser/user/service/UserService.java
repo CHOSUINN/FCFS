@@ -1,6 +1,7 @@
 package com.fcfs.moduleuser.user.service;
 
 import com.fcfs.moduleuser.user.dto.request.UserSignUpRequestDto;
+import com.fcfs.moduleuser.user.dto.response.UserEntityResponseDto;
 import com.fcfs.moduleuser.user.dto.response.UserResponseDto;
 import jakarta.mail.MessagingException;
 
@@ -12,4 +13,6 @@ public interface UserService {
     UserResponseDto verifyEmail(String token);
 
     UserResponseDto infoUser(Long userId);
+
+    UserEntityResponseDto getUserEntity(Long userId);
 }

@@ -49,5 +49,7 @@ module-product/src/main/resources/application.yml
 module-user/src/main/resources/application-local.yml
 module-user/src/main/resources/application.yml
 
+module-api-gateway/src/main/resources/application.yml
+
 docker-compose.yml
 Dockerfile

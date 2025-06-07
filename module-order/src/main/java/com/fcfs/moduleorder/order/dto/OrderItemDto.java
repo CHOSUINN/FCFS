@@ -1,6 +1,6 @@
 package com.fcfs.moduleorder.order.dto;
 
-import com.fcfs.moduleorder.product.entity.Product;
+import com.fcfs.moduleorder.order.dto.response.ProductResponseDto;
 
 public record OrderItemDto(
 
@@ -9,12 +9,12 @@ public record OrderItemDto(
         Integer quantity,
         Integer price
 ) {
-    public static OrderItemDto from(Integer quantity, Product product) {
+    public static OrderItemDto from(Integer quantity, ProductResponseDto product) {
         return new OrderItemDto(
-                product.getId(),
-                product.getName(),
+                product.id(),
+                product.name(),
                 quantity,
-                product.getPrice()
+                product.price()
         );
     }
 }

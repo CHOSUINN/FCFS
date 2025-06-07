@@ -1,6 +1,5 @@
 package com.fcfs.moduleorder.global.exception;
 
-import com.fcfs.moduleproduct.global.exception.ErrorInterface;
 import org.springframework.http.HttpStatus;
 
 public enum ErrorCode implements ErrorInterface {

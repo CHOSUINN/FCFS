@@ -1,7 +1,10 @@
 package com.fcfs.moduleuser.user.service;
 
 import com.fcfs.moduleuser.email.service.EmailVerificationService;
+import com.fcfs.moduleuser.global.exception.CustomException;
+import com.fcfs.moduleuser.global.exception.ErrorCode;
 import com.fcfs.moduleuser.user.dto.request.UserSignUpRequestDto;
+import com.fcfs.moduleuser.user.dto.response.UserEntityResponseDto;
 import com.fcfs.moduleuser.user.dto.response.UserResponseDto;
 import com.fcfs.moduleuser.user.entity.User;
 import com.fcfs.moduleuser.user.repository.UserRepository;
@@ -57,5 +60,13 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("존재하지 않는 회원입니다.");
         }
         return UserResponseDto.toDto(user);
+    }
+
+    @Override
+    public UserEntityResponseDto getUserEntity(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
+        return UserEntityResponseDto.toDto(user);
     }
 }

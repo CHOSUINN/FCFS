@@ -40,21 +40,21 @@ public class Wishlist {
             fetch = FetchType.LAZY,
             orphanRemoval = true
     )
-    private List<WishlistDetail> wishlistDetail = new ArrayList<>();
+    private List<WishlistItem> wishlistItems = new ArrayList<>();
 
-    public void addWishlistDetail(WishlistDetail detail) {
-        wishlistDetail.add(detail);
+    public void addWishlistDetail(WishlistItem detail) {
+        wishlistItems.add(detail);
         detail.setWishlist(this);
     }
 
-    public void removeWishlistDetail(WishlistDetail detail) {
-        wishlistDetail.remove(detail);
+    public void removeWishlistDetail(WishlistItem detail) {
+        wishlistItems.remove(detail);
         detail.setWishlist(null);
     }
 
     // 주문 혹은 상품 전체 삭제 기능 사용시 사용하는 메서드
     public void initWishlist() {
-        wishlistDetail.clear();
+        wishlistItems.clear();
     }
 
 }

@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             LoginRequestDto requestDto = new ObjectMapper()
                     .readValue(request.getInputStream(), LoginRequestDto.class);
 
-            // 2) dto의 필드 검증
+            // 2) dto의 validation 검증
             Set<ConstraintViolation<LoginRequestDto>> violations = validator.validate(requestDto);
             if (!violations.isEmpty()) {
                 // 검증 위반 메시지들을 모아 하나의 문자열로 합칩니다.
@@ -94,10 +94,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         log.info("로그인 성공");
-        String email = ((UserDetailsImpl) authResult.getPrincipal()).getEmail();
+        Long userId = ((UserDetailsImpl) authResult.getPrincipal()).getUserId();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        String token = jwtUtil.createToken(email, role);
+        String token = jwtUtil.createToken(userId, role);
 
         response.addHeader("Authorization", "Bearer " + token);
 

@@ -3,7 +3,7 @@ package com.fcfs.moduleuser.wishlist.dto.request;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-public record WishlistDetailRequestDto(
+public record WishlistItemRequestDto(
 
         @NotNull(message = "상품 아이디는 필수 입력 사항입니다.")
         Long productId,

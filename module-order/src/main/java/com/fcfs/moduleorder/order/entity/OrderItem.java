@@ -1,5 +1,6 @@
 package com.fcfs.moduleorder.order.entity;
 
+import com.fcfs.moduleorder.order.dto.WishlistItemDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "order_details")
-public class OrderDetail {
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +26,12 @@ public class OrderDetail {
 
     @Column(nullable = false)
     private Long productId;
+
+    /** WishlistItemDto → OrderItem 변환용 */
+    public static OrderItem from(WishlistItemDto wd) {
+        return OrderItem.builder()
+                .productId(wd.productId())
+                .quantity(wd.quantity())
+                .build();
+    }
 }

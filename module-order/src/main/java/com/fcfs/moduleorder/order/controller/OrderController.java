@@ -1,7 +1,6 @@
 package com.fcfs.moduleorder.order.controller;
 
 import com.fcfs.moduleorder.global.common.ApiResponse;
-import com.fcfs.moduleorder.global.security.annotation.UserId;
 import com.fcfs.moduleorder.order.dto.request.OrderRefundRequestDto;
 import com.fcfs.moduleorder.order.dto.request.OrderRequestDto;
 import com.fcfs.moduleorder.order.dto.response.OrderResponseDto;
@@ -26,7 +25,7 @@ public class OrderController {
 
     // 주문 넣기
     @PostMapping
-    public ResponseEntity<ApiResponse<OrderResponseDto>> create(@UserId Long userId,
+    public ResponseEntity<ApiResponse<OrderResponseDto>> create(@RequestHeader("X-USER-ID") Long userId,
                                                                 @Valid @RequestBody OrderRequestDto requestDto) {
         return ResponseEntity.ok(ApiResponse.success(
                 HttpStatus.OK,
@@ -37,7 +36,7 @@ public class OrderController {
 
     // 주문 취소
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<?> cancel(@UserId Long userId,
+    public ResponseEntity<?> cancel(@RequestHeader("X-USER-ID") Long userId,
                                  @PathVariable(name = "orderId") Long orderId) {
         orderService.cancelOrder(userId, orderId);
         return ResponseEntity.ok(ApiResponse.success(
@@ -48,7 +47,7 @@ public class OrderController {
 
     // 주문 전체 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<List<OrderResponseDto>>> list(@UserId Long userId) {
+    public ResponseEntity<ApiResponse<List<OrderResponseDto>>> list(@RequestHeader("X-USER-ID") Long userId) {
         return ResponseEntity.ok(ApiResponse.success(
                 HttpStatus.OK,
                 "주문 목록을 조회하는데 성공하였습니다.",
@@ -58,7 +57,7 @@ public class OrderController {
 
     // 주문 단일 조회(주문내역 조회)
     @GetMapping("/{orderId}")
-    public ResponseEntity<ApiResponse<OrderResponseDto>> detail(@UserId Long userId,
+    public ResponseEntity<ApiResponse<OrderResponseDto>> detail(@RequestHeader("X-USER-ID") Long userId,
                                                                 @PathVariable(name = "orderId") Long orderId) {
         return ResponseEntity.ok(ApiResponse.success(
                 HttpStatus.OK,
@@ -69,21 +68,22 @@ public class OrderController {
 
     // 주문 상태별 조회
     @GetMapping("/status")
-    public ResponseEntity<ApiResponse<List<OrderResponseDto>>> listStatus(@UserId Long userId,
+    public ResponseEntity<ApiResponse<List<OrderResponseDto>>> listStatus(@RequestHeader("X-USER-ID") Long userId,
                                                                           @RequestParam(name = "seq")int seq) {
         return ResponseEntity.ok(ApiResponse.success(
                 HttpStatus.OK,
-                "\'" + OrderStatus.getOrderStatus(seq) + "\'별 목록 조회하는데 성공하였습니다.",
+                "'" + OrderStatus.getOrderStatus(seq) + "'별 목록 조회하는데 성공하였습니다.",
                 orderService.listOrderByStatus(userId, seq)
         ));
     }
 
+    // Todo: 지금은 주문 전체 반품인데, 특정 물품만 반품하게 변경
     // 주문내역 통째로 반품
     @PostMapping("/{orderId}/return")
-    public ResponseEntity<?> refund(@UserId Long userId,
-                                 @PathVariable(name = "orderId") Long orderId,
-                                 @Valid @RequestBody OrderRefundRequestDto requestDto) {
-        orderService.refundProduct(userId, orderId, requestDto);
+    public ResponseEntity<?> refund(@RequestHeader("X-USER-ID") Long userId,
+                                 @PathVariable(name = "orderId") Long orderId
+    ) {
+        orderService.refundProduct(userId, orderId);
         return ResponseEntity.ok(ApiResponse.success(
                 HttpStatus.OK,
                 "반품이 되었습니다."

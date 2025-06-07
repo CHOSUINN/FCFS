@@ -1,16 +1,16 @@
 package com.fcfs.moduleuser.wishlist.service;
 
-import com.fcfs.moduleuser.client.ProductClient;
-import com.fcfs.moduleuser.wishlist.dto.response.ProductResponseDto;
+import com.fcfs.moduleuser.client.ProductFeignClient;
 import com.fcfs.moduleuser.global.exception.CustomException;
 import com.fcfs.moduleuser.global.exception.ErrorCode;
 import com.fcfs.moduleuser.user.entity.User;
 import com.fcfs.moduleuser.user.repository.UserRepository;
 import com.fcfs.moduleuser.wishlist.dto.WishlistItemDto;
-import com.fcfs.moduleuser.wishlist.dto.request.WishlistDetailRequestDto;
+import com.fcfs.moduleuser.wishlist.dto.request.WishlistItemRequestDto;
+import com.fcfs.moduleuser.wishlist.dto.response.ProductResponseDto;
 import com.fcfs.moduleuser.wishlist.dto.response.WishlistResponseDto;
 import com.fcfs.moduleuser.wishlist.entity.Wishlist;
-import com.fcfs.moduleuser.wishlist.entity.WishlistDetail;
+import com.fcfs.moduleuser.wishlist.entity.WishlistItem;
 import com.fcfs.moduleuser.wishlist.repository.WishlistRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +29,11 @@ public class WishlistServiceImpl implements WishlistService {
 
     private final WishlistRepository wishlistRepository;
     private final UserRepository userRepository;
-    private final ProductClient productClient;
+    private final ProductFeignClient productClient;
 
     // 위시리스트 물품 등록 및 수량 수정
     @Override
-    public WishlistResponseDto createOrUpdateWishlist(Long userId, WishlistDetailRequestDto requestDto) {
+    public WishlistResponseDto createOrUpdateWishlist(Long userId, WishlistItemRequestDto requestDto) {
 
         // User 조회
         User user = userRepository.findById(userId).orElseThrow(
@@ -59,9 +59,9 @@ public class WishlistServiceImpl implements WishlistService {
             throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
 
         // 위시리스트 내에 중복 상품인지 확인.
-        List<WishlistDetail> wishlistDetails = wishlist.getWishlistDetail();
-        WishlistDetail existingDetail = null;
-        for (WishlistDetail detail : wishlistDetails) {
+        List<WishlistItem> wishlistDetails = wishlist.getWishlistItems();
+        WishlistItem existingDetail = null;
+        for (WishlistItem detail : wishlistDetails) {
             if (detail.getProductId().equals(product.id())) {
                 existingDetail = detail;
                 break;
@@ -72,7 +72,7 @@ public class WishlistServiceImpl implements WishlistService {
         if (existingDetail != null) {
             existingDetail.setQuantity(requestDto.quantity());
         } else {
-            WishlistDetail newDetail = WishlistDetail.from(product.id(), requestDto.quantity());
+            WishlistItem newDetail = WishlistItem.from(product.id(), requestDto.quantity());
             wishlist.addWishlistDetail(newDetail);
         }
 
@@ -107,9 +107,9 @@ public class WishlistServiceImpl implements WishlistService {
                 () -> new CustomException(ErrorCode.WISHLIST_NOT_FOUND)
         );
 
-        List<WishlistDetail> wishlistDetails = wishlist.getWishlistDetail();
-        WishlistDetail toRemove = null;
-        for (WishlistDetail detail : wishlistDetails) {
+        List<WishlistItem> wishlistDetails = wishlist.getWishlistItems();
+        WishlistItem toRemove = null;
+        for (WishlistItem detail : wishlistDetails) {
             if (detail.getProductId().equals(productId)) {
                 toRemove = detail;
                 wishlist.removeWishlistDetail(detail);
@@ -125,13 +125,22 @@ public class WishlistServiceImpl implements WishlistService {
         return toResponseDto(wishlist);
     }
 
+    @Transactional
+    @Override
+    public void clearWishlist(Long userId) {
+        Wishlist wishlist = wishlistRepository.findByUser_id(userId).orElseThrow(
+                () -> new CustomException(ErrorCode.WISHLIST_NOT_FOUND)
+        );
+        wishlist.initWishlist();
+    }
+
     // wishlistResponseDto로 변환
     private WishlistResponseDto toResponseDto(Wishlist wishlist) {
-        List<WishlistDetail> wishlistDetails = wishlist.getWishlistDetail();
+        List<WishlistItem> wishlistDetails = wishlist.getWishlistItems();
 
         List<WishlistItemDto> itemDtos = new ArrayList<>();
         Integer totalPrice = 0;
-        for (WishlistDetail wishlistDetail : wishlistDetails) {
+        for (WishlistItem wishlistDetail : wishlistDetails) {
             ProductResponseDto product = productClient.getProductById(wishlistDetail.getProductId());
             itemDtos.add(WishlistItemDto.from(product, wishlistDetail.getQuantity()));
             totalPrice += (wishlistDetail.getQuantity() * product.price());

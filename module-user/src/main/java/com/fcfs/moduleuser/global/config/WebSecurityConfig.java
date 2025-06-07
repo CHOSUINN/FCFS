@@ -1,15 +1,12 @@
 package com.fcfs.moduleuser.global.config;
 
-import com.fcfs.moduleuser.global.security.UserDetailsServiceImpl;
 import com.fcfs.moduleuser.global.security.filter.JwtAuthenticationFilter;
-import com.fcfs.moduleuser.global.security.filter.JwtAuthorizationFilter;
 import com.fcfs.moduleuser.global.security.util.JwtUtil;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,7 +24,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
-    private final UserDetailsServiceImpl userDetailsService;
     private final Validator validator;
     private final AuthenticationConfiguration authenticationConfiguration; // authentication manger 주입을 위해 사용
 
@@ -47,17 +43,12 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
-    }
-
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CSRF 설정
         http.csrf((csrf) -> csrf.disable());
 
@@ -71,24 +62,15 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-
-                        // 상품 조회 api
-                        .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**")
-                            .permitAll()
-                        // 상품 생성, 수정, 삭제 api
-                        .requestMatchers(HttpMethod.POST, "/api/products").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/api/products/*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/products/*").authenticated()
-
                         // 회원가입, 이메일 인증 api
-                        .requestMatchers("/api/auth/register", "api/verify/**").permitAll()
-                        // 그 외 모든 요청 인증처리
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/auth/login", "/api/auth/register", "api/verify/**").permitAll()
+                        // 정적 리소스
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        // 그 외 모든 요청도 일단 열어두기
+                        .anyRequest().permitAll()
         );
 
         // 필터관리
-        http.addFilterBefore(jwtAuthorizationFilter(), jwtAuthenticationFilter.getClass());
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

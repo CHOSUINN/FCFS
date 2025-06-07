@@ -1,8 +1,8 @@
 package com.fcfs.moduleuser.user.controller;
 
 import com.fcfs.moduleuser.global.common.ApiResponse;
-import com.fcfs.moduleuser.global.security.UserDetailsImpl;
 import com.fcfs.moduleuser.user.dto.request.UserSignUpRequestDto;
+import com.fcfs.moduleuser.user.dto.response.UserEntityResponseDto;
 import com.fcfs.moduleuser.user.dto.response.UserResponseDto;
 import com.fcfs.moduleuser.user.service.UserService;
 import jakarta.mail.MessagingException;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -44,11 +43,16 @@ public class UserController {
     }
 
     @GetMapping("/users/me")
-    public ResponseEntity<ApiResponse<UserResponseDto>> info(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ApiResponse<UserResponseDto>> info(@RequestHeader("X-USER-ID") Long userId) {
         return ResponseEntity.ok(ApiResponse.success(
                 HttpStatus.OK,
                 "회원정보 조회에 성공하였습니다.",
-                userService.infoUser(userDetails.getUser().getId())
+                userService.infoUser(userId)
         ));
+    }
+
+    @GetMapping("/users/{userId}")
+    public UserEntityResponseDto getUserEntity(@PathVariable("userId") Long userId) {
+        return userService.getUserEntity(userId);
     }
 }

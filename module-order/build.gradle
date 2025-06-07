@@ -29,18 +29,14 @@ ext {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
 
 	// openFeign
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
@@ -48,18 +44,6 @@ dependencies {
 
 	// Reddison(Lock)
 //    implementation("org.redisson:redisson-spring-boot-starter:3.45.1")
-
-	// Redis
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
-	// SMTP
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5'
-//    implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
-
-	// JWT
-	compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
-	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
-	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
 	// json
 	implementation 'org.json:json:20230227'
