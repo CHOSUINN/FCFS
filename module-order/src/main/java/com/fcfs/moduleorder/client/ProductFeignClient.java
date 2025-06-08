@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "product-service", url = "http://localhost:8082")
+@FeignClient(name = "product-service", url = "${services.product.url}")
 public interface ProductFeignClient {
 
     /** 상품 정보 조회 */
