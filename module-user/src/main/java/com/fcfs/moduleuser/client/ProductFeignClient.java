@@ -7,12 +7,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "product-service", url = "${services.product.url}")
+@FeignClient(name = "product-service",
+        url = "${services.product.url}",
+        fallback = ProductFeignFallback.class
+)
 public interface ProductFeignClient {
 
-    @GetMapping("api/products/{productId}")
+    @GetMapping("/api/products/{productId}")
     ProductResponseDto getProductById(@PathVariable("productId") Long productId);
 
-    @GetMapping("/products")
+    @GetMapping("/api/products")
     List<ProductResponseDto> getProducts();
 }
+

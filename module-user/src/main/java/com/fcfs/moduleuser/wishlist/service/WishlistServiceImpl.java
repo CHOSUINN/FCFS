@@ -52,11 +52,14 @@ public class WishlistServiceImpl implements WishlistService {
         // Product 조회
         ProductResponseDto product;
         product = productClient.getProductById(requestDto.productId());
-        log.info("product id === {}", product.id());
-        log.info("product id === {}", product.name());
-        log.info("product id === {}", product.description());
-        if (product == null)
+        log.info("product id == {}", product.id());
+        log.info("product id == {}", product.name());
+        log.info("product id == {}", product.description());
+        // fallback 함수 에러 잡아내기 : id = -1L
+        if (product.id() == -1L) {
+            log.error("product is null");
             throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
 
         // 위시리스트 내에 중복 상품인지 확인.
         List<WishlistItem> wishlistDetails = wishlist.getWishlistItems();
