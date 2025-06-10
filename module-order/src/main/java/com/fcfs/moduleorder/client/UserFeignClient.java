@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "user-service", url = "${services.user.url}")
+@FeignClient(name = "user-service"
+        , url = "${services.user.url}"
+        , fallback = UserFeignClientFallback.class
+)
 public interface UserFeignClient {
 
     /** 사용자 정보 조회 */
-    @GetMapping("api/users/{userId}")
+    @GetMapping("/api/users/{userId}")
     UserEntityResponseDto getUserEntity(@PathVariable("userId") Long userId);
 
     /** 해당 유저의 위시리스트 조회 */

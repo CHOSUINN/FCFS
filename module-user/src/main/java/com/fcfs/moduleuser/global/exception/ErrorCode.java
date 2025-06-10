@@ -71,11 +71,12 @@ public enum ErrorCode implements ErrorInterface {
             "Order Return Expired",
             "반송 가능 기간을 초과하였습니다."
     ),
-    PRODUCT_FEIGN_FALLBACK_FAILURE(
+
+    FEIGN_ERROR(
             HttpStatus.BAD_REQUEST.value(),
-            "PRODUCT_FEIGN_FALLBACK_FAILURE",
-            "Fail when ProductFeignCient was called",
-            "상품 페인 요청 실패하엿습니다."
+            "FEIGN_ERROR",
+            "Feign Error",
+            "페인 요청 에러"
     ),
 
     INVALID_PARAMETER(

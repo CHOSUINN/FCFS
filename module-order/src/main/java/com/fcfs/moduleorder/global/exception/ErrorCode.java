@@ -72,6 +72,12 @@ public enum ErrorCode implements ErrorInterface {
             "반송 가능 기간을 초과하였습니다."
     ),
 
+    FEIGN_ERROR(
+            HttpStatus.BAD_REQUEST.value(),
+            "FEIGN_ERROR",
+            "Feign Error",
+            "페인 요청 에러"
+    ),
 
     INVALID_PARAMETER(
             HttpStatus.BAD_REQUEST.value(),

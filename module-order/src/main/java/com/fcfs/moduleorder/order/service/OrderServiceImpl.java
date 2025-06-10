@@ -40,11 +40,15 @@ public class OrderServiceImpl implements OrderService {
         UserEntityResponseDto user = userFeignClient.getUserEntity(userId);
         if (user == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        } else if (user.userId() == -1L) {
+            throw new CustomException(ErrorCode.FEIGN_ERROR);
         }
 
         WishlistResponseDto wishlist = userFeignClient.getWishlistEntity(userId);
         if (wishlist == null) {
             throw new CustomException(ErrorCode.ORDER_FAILURE_EMPTY_WISHLIST);
+        } else if (wishlist.wishlistId() == -1L) {
+            throw new CustomException(ErrorCode.FEIGN_ERROR);
         }
 
         Order order = Order.from(userId, requestDto);
@@ -140,7 +144,15 @@ public class OrderServiceImpl implements OrderService {
 
         for (OrderItem detail : order.getOrderDetails()) {
             // 원격 상품 서비스 호출
-            ProductResponseDto prod = productFeignClient.getProduct(detail.getProductId());
+            ProductResponseDto prod = productFeignClient.getProductById(detail.getProductId());
+
+            // fallback 함수 예외처리
+            if (prod == null) {
+                throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "상품 정보를 불러올 수 없습니다. (id=" + detail.getProductId() + ")");
+            } else if (prod.price() == -1L) {
+                throw new CustomException(ErrorCode.FEIGN_ERROR);
+            }
+
             OrderItemDto itemDto = OrderItemDto.from(detail.getQuantity(), prod);
             items.add(itemDto);
 
