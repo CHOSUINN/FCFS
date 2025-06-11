@@ -13,7 +13,6 @@ public class ProductFeignFallback implements ProductFeignClient {
     @Override
     public ProductResponseDto getProductById(Long productId) {
         log.warn("[Fallback] getProductById: productId={}, 서비스 장애!", productId);
-        // 장애 안내용 더미 데이터
         throw new CustomException(ErrorCode.FEIGN_ERROR);
     }
 }
