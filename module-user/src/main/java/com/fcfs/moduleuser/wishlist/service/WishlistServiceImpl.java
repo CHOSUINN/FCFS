@@ -53,8 +53,7 @@ public class WishlistServiceImpl implements WishlistService {
         ProductResponseDto product;
         product = productClient.getProductById(requestDto.productId());
         log.info("product id == {}", product.id());
-        log.info("product id == {}", product.name());
-        log.info("product id == {}", product.description());
+        log.info("product name == {}", product.name());
         // fallback 함수 에러 잡아내기 : id = -1L
         if (product.id() == -1L) {
             log.error("product is null");
