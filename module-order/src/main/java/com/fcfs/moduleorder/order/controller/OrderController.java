@@ -35,7 +35,7 @@ public class OrderController {
 
     // 주문 취소
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<?> cancel(@RequestHeader("X-USER-ID") Long userId,
+    public ResponseEntity<ApiResponse<Void>> cancel(@RequestHeader("X-USER-ID") Long userId,
                                  @PathVariable(name = "orderId") Long orderId) {
         orderService.cancelOrder(userId, orderId);
         return ResponseEntity.ok(ApiResponse.success(
@@ -79,7 +79,7 @@ public class OrderController {
     // Todo: 지금은 주문 전체 반품인데, 특정 물품만 반품하게 변경
     // 주문내역 통째로 반품
     @PostMapping("/{orderId}/return")
-    public ResponseEntity<?> refund(@RequestHeader("X-USER-ID") Long userId,
+    public ResponseEntity<ApiResponse<Void>> refund(@RequestHeader("X-USER-ID") Long userId,
                                  @PathVariable(name = "orderId") Long orderId
     ) {
         orderService.refundProduct(userId, orderId);
