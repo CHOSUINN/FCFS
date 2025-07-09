@@ -27,7 +27,8 @@ public class DataInitializer {
                 "스테인리스 스틸 텀블러 (0.5L, 핑크)",
                 50,
                 25000,
-                defaultUser
+                defaultUser,
+                true
         );
 
         Product p2 = new Product(
@@ -36,7 +37,8 @@ public class DataInitializer {
                 "15인치 노트북 수납용 방수 백팩",
                 30,
                 40000,
-                defaultUser
+                defaultUser,
+                true
         );
 
         Product p3 = new Product(
@@ -45,7 +47,8 @@ public class DataInitializer {
                 "저소음 무선 블루투스 마우스 (검정)",
                 100,
                 15000,
-                defaultUser
+                defaultUser,
+                true
         );
 
         Product p4 = new Product(
@@ -54,7 +57,8 @@ public class DataInitializer {
                 "RGB LED 기계식 키보드 (청축)",
                 20,
                 80000,
-                defaultUser
+                defaultUser,
+                true
         );
 
         Product p5 = new Product(
@@ -63,7 +67,8 @@ public class DataInitializer {
                 "2m 고속 충전 USB-C 케이블",
                 200,
                 8000,
-                defaultUser
+                defaultUser,
+                true
         );
 
         // ────── 3. 한 번에 저장 (saveAll) ──────

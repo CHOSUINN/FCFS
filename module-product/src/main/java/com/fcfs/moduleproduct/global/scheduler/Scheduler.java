@@ -19,7 +19,8 @@ public class Scheduler {
     private final RedisTemplate<String, Object> redisTemplate;
 
     // 상품 열리는 이벤트. 매주 토,일 오후 2시에 이벤트 열림. 이벤트는 항상 저녁 6시에 종료된다.
-    @Scheduled(cron = "0 0 14 * * Sat,Sun")
+//    @Scheduled(cron = "0 0 14 * * Sat,Sun")
+    @Scheduled(cron = "0 51 3 * * *")
     public void eventOpen() {
         List<Product> eventProducts = productRepository.findAllByIsEventTrue();
 
@@ -29,7 +30,7 @@ public class Scheduler {
             Integer stock = product.getStock();
 
             if (Boolean.FALSE.equals(redisTemplate.hasKey(redisKey))) {
-                redisTemplate.opsForValue().set(redisKey, stock);
+                redisTemplate.opsForValue().set(redisKey, String.valueOf(stock));
             }
         }
     }

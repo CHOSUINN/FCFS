@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "payments")
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Payment {
 
     @Id
@@ -37,4 +39,16 @@ public class Payment {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    public static Payment from(Long userId, Long orderId) {
+        return Payment.builder()
+                .userId(userId)
+                .orderId(orderId)
+                .paymentStatus(PaymentStatus.PENDING)
+                .build();
+    }
+
+    public void changeStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
 }

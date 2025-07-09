@@ -71,6 +71,12 @@ public enum ErrorCode implements ErrorInterface {
             "Order Return Expired",
             "반송 가능 기간을 초과하였습니다."
     ),
+    OUT_OF_STOCK(
+            HttpStatus.BAD_REQUEST.value(),
+            "OUT_OF_STOCK",
+            "Stock not available",
+            "재고가 부족합니다."
+    ),
 
     FEIGN_ERROR(
             HttpStatus.BAD_REQUEST.value(),

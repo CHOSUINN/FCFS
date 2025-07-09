@@ -2,9 +2,7 @@ package com.fcfs.moduleorder.order.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-@Setter
 @Getter
 @RequiredArgsConstructor
 public enum OrderStatus {

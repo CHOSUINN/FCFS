@@ -30,8 +30,8 @@ public class PaymentController {
 
     // 주문 생성시 호출되는 결제 api
     @GetMapping
-    public PaymentResult payment(@RequestParam Long userId,
-                                 @RequestParam Long orderId
+    public PaymentResult payment(@RequestParam(name = "userId") Long userId,
+                                 @RequestParam(name = "orderId") Long orderId
     ) {
         log.info("payment request: {}, {}", userId, orderId);
         return paymentService.payment(userId, orderId);

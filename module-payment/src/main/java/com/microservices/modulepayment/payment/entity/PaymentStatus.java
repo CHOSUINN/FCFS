@@ -7,8 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PaymentStatus {
     PENDING(0, "결제 중"),
-    APPROVED(1, "결제 승인"),
-    REJECTED(2, "결제 거부");
+    FAIL(1, "결제 실패"),
+    APPROVED(2, "결제 승인"),
+    REJECTED(3, "결제 거부");
 
     private final int seq;
     private final String status;
