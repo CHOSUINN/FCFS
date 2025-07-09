@@ -1,7 +1,9 @@
 package com.fcfs.moduleorder.order.service;
 
+import com.fcfs.moduleorder.client.PaymentFeignClient;
 import com.fcfs.moduleorder.client.ProductFeignClient;
 import com.fcfs.moduleorder.client.UserFeignClient;
+import com.fcfs.moduleorder.client.dto.PaymentResult;
 import com.fcfs.moduleorder.global.exception.CustomException;
 import com.fcfs.moduleorder.global.exception.ErrorCode;
 import com.fcfs.moduleorder.order.dto.OrderItemDto;
@@ -33,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final UserFeignClient userFeignClient;
     private final ProductFeignClient productFeignClient;
+    private final PaymentFeignClient paymentFeignClient;
 
     @Override
     public OrderResponseDto createOrder(Long userId, OrderRequestDto requestDto) {
@@ -40,15 +43,11 @@ public class OrderServiceImpl implements OrderService {
         UserEntityResponseDto user = userFeignClient.getUserEntity(userId);
         if (user == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        } else if (user.userId() == -1L) {
-            throw new CustomException(ErrorCode.FEIGN_ERROR);
         }
 
         WishlistResponseDto wishlist = userFeignClient.getWishlistEntity(userId);
         if (wishlist == null) {
             throw new CustomException(ErrorCode.ORDER_FAILURE_EMPTY_WISHLIST);
-        } else if (wishlist.wishlistId() == -1L) {
-            throw new CustomException(ErrorCode.FEIGN_ERROR);
         }
 
         Order order = Order.from(userId, requestDto);
@@ -56,8 +55,21 @@ public class OrderServiceImpl implements OrderService {
             order.addOrderDetail(OrderItem.from(wd));
         }
 
+        // 주문 생성
         orderRepository.save(order);
-        userFeignClient.clearWishlist(userId);
+
+        // 결제 api 호출
+        PaymentResult paymentResult = paymentFeignClient.getPaymentResult(userId, order.getId());
+
+        // 결제 완료되면 주문 상태 변경.
+        // 실패시 그대로 취소
+        if (paymentResult.isSuccess()) {
+            // 성공시 상품 준비중으로 변경 후 위시리스트 초기화
+            order.setOrderStatus(order.getOrderStatus().next());
+            userFeignClient.clearWishlist(userId);
+        } else {
+            order.setOrderStatus(OrderStatus.ORDER_CANCELED);
+        }
 
         return toResponseDto(order);
     }

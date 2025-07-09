@@ -54,7 +54,7 @@ public class Order {
 
     public static Order from(Long userId, OrderRequestDto requestDto) {
         return Order.builder()
-                .orderStatus(OrderStatus.PREPARING_PRODUCT)
+                .orderStatus(OrderStatus.PENDING)
                 .address(requestDto.address())
                 .userId(userId)
                 .build();

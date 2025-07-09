@@ -1,0 +1,46 @@
+server:
+  port: 8084
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  cloud:
+    config:
+      enabled: false
+      import-check: false
+      discovery:
+        enabled: false
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    # 로컬 mysql접근
+    url: jdbc:mysql://localhost:3306/module_payment_db
+    username: root
+    password: 2203
+
+    # 도커 mysql접근
+#    url: jdbc:mysql://127.0.0.1:3307/fcfs
+#    username: root
+#    password: 1234
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL=DEBUG:
+
+jwt:
+  secret:
+    key: SW1Hb25uYWJlVGhlQmVzdFByb2dyYW1tZXJBbmRJTWVhbkl0

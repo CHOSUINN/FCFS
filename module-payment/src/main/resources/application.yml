@@ -1,0 +1,15 @@
+# application.yml
+spring:
+  config:
+    import: "classpath:application-local.yml"
+  profiles:
+    active: local
+
+
+
+#docker Container Setting
+#spring:
+#  config:
+#    import: "classpath:application-container.yml"
+#  profiles:
+#    active: container

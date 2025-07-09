@@ -1,4 +1,4 @@
-package com.fcfs.moduleorder.global.common;
+package com.microservices.modulepayment.global.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,9 +35,8 @@ public class ApiResponse<T> {
                 .build();
     }
 
-
     // 간단한 성공 응답 생성 (데이터 없음)
-    public static ApiResponse<Void> success(HttpStatus httpStatus, String message) {
+    public static ApiResponse success(HttpStatus httpStatus, String message) {
         return success(httpStatus, message, null);
     }
 

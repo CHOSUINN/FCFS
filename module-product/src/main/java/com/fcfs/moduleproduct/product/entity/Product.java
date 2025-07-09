@@ -32,4 +32,8 @@ public class Product extends Timestamped {
 
     @Column(nullable = false)
     private Long userId;
+
+    // 선착순 구매로 등록할지에 대한 여부
+    @Column(nullable = false)
+    private boolean isEvent;
 }
