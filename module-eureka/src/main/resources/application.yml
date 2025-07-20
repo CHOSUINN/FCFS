@@ -1,0 +1,25 @@
+server:
+    port: 8761
+
+spring:
+    application:
+        name: discovery-server
+
+eureka:
+    client:
+        register-with-eureka: false
+        fetch-registry: false
+        service-url:
+            defaultZone: http://localhost:8761/eureka
+
+    server:
+        # \uC11C\uBC84\uAC00 \uC694\uCCAD\uC744 \uBC1B\uAE30 \uC804 \uB300\uAE30\uD560 \uCD08\uAE30 \uC2DC\uAC04(ms)
+        # default 5\uBD84 : \uC2E4\uBB34\uC5D0\uC11C\uB294 \uBCF4\uD1B5 \uBAA8\uB4E0 \uC11C\uBE44\uC2A4\uAC00 \uB4F1\uB85D \uB418\uAE38 \uAE30\uB2E4\uB9AC\uAE30 \uC704\uD574 5\uBD84 \uD6C4 \uC815\uBCF4\uB97C \uACF5\uC720
+        # \uAC1C\uC778 \uD504\uB85C\uC81D\uD2B8\uC778 \uB9CC\uD07C \uBE60\uB978 \uB4F1\uB85D\uC744 \uC704\uD574 5ms\uB85C \uC124\uC815
+        wait-time-in-ms-when-sync-empty: 5
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
