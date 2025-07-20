@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -24,14 +25,18 @@ public class OrderController {
 
     // 주문 넣기
     @PostMapping
-    public ResponseEntity<ApiResponse<OrderResponseDto>> create(@RequestHeader("X-USER-ID") Long userId,
-                                                                @Valid @RequestBody OrderRequestDto requestDto) {
-        return ResponseEntity.ok(ApiResponse.success(
-                HttpStatus.OK,
-                "위시리스트 상품을 주문하는데 성공하였습니다.",
-                orderService.createOrder(userId, requestDto)
-        ));
+    public Mono<ResponseEntity<ApiResponse<OrderResponseDto>>> create(@RequestHeader("X-USER-ID") Long userId,
+                                                                      @Valid @RequestBody OrderRequestDto requestDto) {
+        return orderService.createOrder(userId, requestDto)
+                .map(orderResponseDto -> ResponseEntity.ok(
+                        ApiResponse.success(
+                                HttpStatus.OK,
+                                "위시리스트 상품을 주문하는데 성공하였습니다.",
+                                orderResponseDto
+                        )
+                ));
     }
+
 
     // 주문 취소
     @DeleteMapping("/{orderId}")

@@ -19,14 +19,16 @@ import com.fcfs.moduleorder.order.entity.OrderStatus;
 import com.fcfs.moduleorder.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j(topic = "OrderServiceImpl")
 @Service
@@ -38,19 +40,20 @@ public class OrderServiceImpl implements OrderService {
     private final UserFeignClient userFeignClient;
     private final ProductFeignClient productFeignClient;
     private final PaymentFeignClient paymentFeignClient;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
 
     @Override
-    public OrderResponseDto createOrder(Long userId, OrderRequestDto requestDto) {
-
+    public Mono<OrderResponseDto> createOrder(Long userId, OrderRequestDto requestDto) {
+        // 동기 외부 서비스 호출부는 리액티브 전환이 어렵지만, Redis 영역만 리액티브로 처리
+        // (FeignClient들은 원래 동기이므로 여기서는 생략)
         UserEntityResponseDto user = userFeignClient.getUserEntity(userId);
         if (user == null) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            return Mono.error(new CustomException(ErrorCode.USER_NOT_FOUND));
         }
 
         WishlistResponseDto wishlist = userFeignClient.getWishlistEntity(userId);
         if (wishlist == null) {
-            throw new CustomException(ErrorCode.ORDER_FAILURE_EMPTY_WISHLIST);
+            return Mono.error(new CustomException(ErrorCode.ORDER_FAILURE_EMPTY_WISHLIST));
         }
 
         Order order = Order.from(userId, requestDto);
@@ -58,79 +61,84 @@ public class OrderServiceImpl implements OrderService {
             order.addOrderDetail(OrderItem.from(wd));
         }
 
-        // 주문 생성
         orderRepository.save(order);
 
-        // 결제 직전에 재고를 미리 선점해둔다.
-        reserveStock(order.getOrderDetails(), order.getUserId());
-
-        log.info("결제직전까지는 문제 없음");
-        // 결제 api 호출. 결제 실패 혹은 성공 결과 반환
-        PaymentResult paymentResult = paymentFeignClient.getPaymentResult(userId, order.getId());
-
-        // 결제 완료되면 주문 상태 변경.
-        // 실패시 그대로 취소
-        if (paymentResult.isSuccess()) {
-            // 성공시 상품 준비중으로 변경 후 위시리스트 초기화
-            order.setOrderStatus(order.getOrderStatus().next());
-            userFeignClient.clearWishlist(userId);
-        } else {
-            order.setOrderStatus(OrderStatus.ORDER_CANCELED);
-            // 선점 재고 복구
-        }
-
-        return toResponseDto(order);
+        return reserveStock(order.getOrderDetails(), order.getUserId())
+                .flatMap(reserveOk -> {
+                    if (!reserveOk) {
+                        return Mono.error(new CustomException(ErrorCode.OUT_OF_STOCK));
+                    }
+                    log.info("결제직전까지는 문제 없음");
+                    PaymentResult paymentResult = paymentFeignClient.getPaymentResult(userId, order.getId());
+                    if (paymentResult.isSuccess()) {
+                        order.setOrderStatus(order.getOrderStatus().next());
+                        userFeignClient.clearWishlist(userId);
+                    } else {
+                        order.setOrderStatus(OrderStatus.ORDER_CANCELED);
+                        // 결제 실패시 선점 재고 복구
+                        return releaseStock(order.getOrderDetails(), userId)
+                                .then(Mono.just(toResponseDto(order)));
+                    }
+                    return Mono.just(toResponseDto(order));
+                });
     }
 
-    private void reserveStock(List<OrderItem> orderDetails, Long userId) {
-        List<OrderItem> reserved = new ArrayList<>();
-        for (OrderItem detail : orderDetails) {
-            boolean ok = tryReserveStock(detail.getProductId(), userId, detail.getQuantity());
-            if (!ok) {
-                // 이미 선점한 것 롤백
-                for (OrderItem rollback : reserved) {
-                    releaseStock(rollback.getProductId(), userId, rollback.getQuantity());
-                }
-                throw new CustomException(ErrorCode.OUT_OF_STOCK, "상품 재고 부족");
-            }
-            reserved.add(detail);
-        }
+    // [1] 재고 선점 (리스트 버전)
+    private Mono<Boolean> reserveStock(List<OrderItem> orderDetails, Long userId) {
+        // 모든 재고 선점이 성공해야 함
+        return Flux.fromIterable(orderDetails)
+                .concatMap(detail ->
+                        tryReserveStock(detail.getProductId(), userId, detail.getQuantity())
+                                .flatMap(success -> {
+                                    if (!success) {
+                                        // 롤백: 이미 성공한 것 release
+                                        return releaseStock(orderDetails, userId)
+                                                .then(Mono.just(false));
+                                    }
+                                    return Mono.just(true);
+                                })
+                )
+                .all(result -> result); // 모두 true여야 true 반환
     }
 
-    public boolean tryReserveStock(Long productId, Long userId, int quantity) {
+    // [2] 재고 선점 (단일)
+    public Mono<Boolean> tryReserveStock(Long productId, Long userId, int quantity) {
         String stockKey = "product:" + productId + ":stock";
         String userReserveKey = "reserve:" + productId + ":" + userId;
 
-        // 1. 재고 먼저 확인
-        String currentStockStr = redisTemplate.opsForValue().get(stockKey);
-        int currentStock = currentStockStr == null ? 0 : Integer.parseInt(currentStockStr);
+        return reactiveRedisTemplate.opsForValue().get(stockKey)
+                .map(stockStr -> stockStr == null ? 0 : Integer.parseInt(stockStr))
+                .flatMap(currentStock -> {
+                    if (currentStock < quantity) return Mono.just(false);
 
-        if (currentStock < quantity) {
-            // 재고 부족
-            return false;
-        }
-
-        // 2. 재고 차감
-        Long newStock = redisTemplate.opsForValue().decrement(stockKey, quantity);
-        if (newStock == null || newStock < 0) {
-            // 재고 초과 차감된 경우 복구
-            redisTemplate.opsForValue().increment(stockKey, quantity);
-            return false;
-        }
-
-        // 3. 유저별 예약 정보 (선택) - 3분 타임아웃
-        redisTemplate.opsForValue().set(userReserveKey, String.valueOf(quantity), 180, TimeUnit.SECONDS);
-
-        return true;
+                    // 재고 차감
+                    return reactiveRedisTemplate.opsForValue().decrement(stockKey, quantity)
+                            .flatMap(newStock -> {
+                                if (newStock == null || newStock < 0) {
+                                    // 초과 차감 복구
+                                    return reactiveRedisTemplate.opsForValue().increment(stockKey, quantity)
+                                            .thenReturn(false);
+                                }
+                                // 유저별 예약정보 3분간 저장
+                                return reactiveRedisTemplate.opsForValue()
+                                        .set(userReserveKey, String.valueOf(quantity), Duration.ofSeconds(180))
+                                        .thenReturn(true);
+                            });
+                });
     }
 
+    // [3] 재고 롤백 (복구)
+    public Mono<Void> releaseStock(List<OrderItem> orderDetails, Long userId) {
+        return Flux.fromIterable(orderDetails)
+                .flatMap(item -> releaseStock(item.getProductId(), userId, item.getQuantity()))
+                .then();
+    }
 
-    // 결제 실패 혹은 이탈 시 재고 복구
-    public void releaseStock(Long productId, Long userId, int quantity) {
+    public Mono<Void> releaseStock(Long productId, Long userId, int quantity) {
         String stockKey = "product:" + productId + ":stock";
         String userReserveKey = "reserve:" + productId + ":" + userId;
-        redisTemplate.opsForValue().increment(stockKey, quantity);
-        redisTemplate.delete(userReserveKey);
+        return reactiveRedisTemplate.opsForValue().increment(stockKey, quantity)
+                .then(reactiveRedisTemplate.delete(userReserveKey).then());
     }
 
     @Override

@@ -18,39 +18,10 @@ public class Scheduler {
     private final ProductRepository productRepository;
     private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
 
+
 //    // 상품 열리는 이벤트. 매주 토,일 오후 2시에 이벤트 열림. 이벤트는 항상 저녁 6시에 종료된다.
-////    @Scheduled(cron = "0 0 14 * * Sat,Sun")
-//    @Scheduled(cron = "0 51 3 * * *")
-//    public void eventOpen() {
-//        List<Product> eventProducts = productRepository.findAllByIsEventTrue();
-//
-//        for (Product product : eventProducts) {
-//            // 레디스에 재고 세팅
-//            String redisKey = "product:" + product.getId() + ":stock";
-//            Integer stock = product.getStock();
-//
-//            if (Boolean.FALSE.equals(redisTemplate.hasKey(redisKey))) {
-//                redisTemplate.opsForValue().set(redisKey, String.valueOf(stock));
-//            }
-//        }
-//    }
-//
-//    // 이벤트 종료.
-//    @Scheduled(cron = "0 0 18 * * Sat,Sun")
-//    public void eventClose() {
-//        List<Product> eventProducts = productRepository.findAllByIsEventTrue();
-//
-//        for (Product product : eventProducts) {
-//            String redisKey = "product:" + product.getId() + ":stock";
-//
-//            if (Boolean.TRUE.equals(redisTemplate.hasKey(redisKey))) {
-//                redisTemplate.delete(redisKey);
-//            }
-//        }
-//    }
-
-
-    @Scheduled(cron = "0 51 3 * * *")
+    ////    @Scheduled(cron = "0 0 14 * * Sat,Sun")
+    @Scheduled(cron = "0 45 15 * * *")
     public void eventOpen() {
         List<Product> eventProducts = productRepository.findAllByIsEventTrue();
 
@@ -60,7 +31,7 @@ public class Scheduler {
 
             reactiveRedisTemplate.hasKey(redisKey)
                     .filter(hasKey -> !hasKey)
-                    .flatMap(_ -> reactiveRedisTemplate.opsForValue().set(redisKey, String.valueOf(stock)))
+                    .flatMap(result -> reactiveRedisTemplate.opsForValue().set(redisKey, String.valueOf(stock)))
                     .subscribe(success -> log.info("Reactor Redis set stock for key {}: {}", redisKey, success));
         }
     }
@@ -74,8 +45,8 @@ public class Scheduler {
 
             reactiveRedisTemplate.hasKey(redisKey)
                     .filter(hasKey -> hasKey)
-                    .flatMap(_ -> reactiveRedisTemplate.delete(redisKey))
-                    .subscribe(result -> log.info("Reactor Redis delete key {}: {}", redisKey, result));
+                    .flatMap(result -> reactiveRedisTemplate.delete(redisKey))
+                    .subscribe(success -> log.info("Reactor Redis delete key {}: {}", redisKey, success));
         }
     }
 
