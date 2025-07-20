@@ -42,6 +42,14 @@ subprojects {
     }
 }
 
+project(':module-eureka') {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+}
+
 project(':module-api-gateway') {
 
     dependencies {
@@ -56,6 +64,8 @@ project(':module-api-gateway') {
         implementation 'org.springframework.boot:spring-boot-starter-validation'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     }
 }
 
@@ -83,6 +93,8 @@ project(':module-user') {
         runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
         runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
     }
 }
 
@@ -97,7 +109,8 @@ project(':module-product') {
         annotationProcessor 'org.projectlombok:lombok'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+//        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
 
         // openFeign
         implementation 'org.springframework.cloud:spring-cloud-starter-config'
@@ -105,6 +118,8 @@ project(':module-product') {
 
         // json
         implementation 'org.json:json:20230227'
+
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     }
 }
@@ -125,6 +140,8 @@ project(':module-order') {
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         implementation 'org.json:json:20230227'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     }
 }
 
@@ -144,6 +161,8 @@ project(':module-payment') {
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         implementation 'org.json:json:20230227'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     }
 }
 
