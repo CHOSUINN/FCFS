@@ -45,7 +45,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Mono<OrderResponseDto> createOrder(Long userId, OrderRequestDto requestDto) {
         // 동기 외부 서비스 호출부는 리액티브 전환이 어렵지만, Redis 영역만 리액티브로 처리
-        // (FeignClient들은 원래 동기이므로 여기서는 생략)
         UserEntityResponseDto user = userFeignClient.getUserEntity(userId);
         if (user == null) {
             return Mono.error(new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -68,7 +67,6 @@ public class OrderServiceImpl implements OrderService {
                     if (!reserveOk) {
                         return Mono.error(new CustomException(ErrorCode.OUT_OF_STOCK));
                     }
-                    log.info("결제직전까지는 문제 없음");
                     PaymentResult paymentResult = paymentFeignClient.getPaymentResult(userId, order.getId());
                     if (paymentResult.isSuccess()) {
                         order.setOrderStatus(order.getOrderStatus().next());
@@ -83,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
                 });
     }
 
-    // [1] 재고 선점 (리스트 버전)
+    // 재고 선점 (리스트 버전)
     private Mono<Boolean> reserveStock(List<OrderItem> orderDetails, Long userId) {
         // 모든 재고 선점이 성공해야 함
         return Flux.fromIterable(orderDetails)
@@ -101,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
                 .all(result -> result); // 모두 true여야 true 반환
     }
 
-    // [2] 재고 선점 (단일)
+    // 재고 선점 (단일)
     public Mono<Boolean> tryReserveStock(Long productId, Long userId, int quantity) {
         String stockKey = "product:" + productId + ":stock";
         String userReserveKey = "reserve:" + productId + ":" + userId;
@@ -127,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
                 });
     }
 
-    // [3] 재고 롤백 (복구)
+    // 재고 롤백 (복구)
     public Mono<Void> releaseStock(List<OrderItem> orderDetails, Long userId) {
         return Flux.fromIterable(orderDetails)
                 .flatMap(item -> releaseStock(item.getProductId(), userId, item.getQuantity()))
